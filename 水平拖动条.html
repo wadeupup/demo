@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--create by ydj on 2018-08-12-->
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>拖动的水平条</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .scroll {
+      width: 400px;
+      height: 8px;
+      background-color: #ccc;
+      margin: 100px;
+      position: relative;
+    }
+
+    .bar {
+      width: 10px;
+      height: 22px;
+      background-color: #369;
+      position: absolute;
+      top: -7px;
+      left: 0;
+      cursor: pointer;
+    }
+
+    .mask {
+      width: 0;
+      height: 100%;
+      background-color: #336699;
+      /*position: absolute;
+				top: 0;
+				left: 0;*/
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scroll" id="scrollBar">
+    <div class="bar"></div>
+    <div class="mask"></div>
+  </div>
+  <div class="demo" id="demo"></div>
+</body>
+
+</html>
+<script>
+  // 获取元素
+  var scrollBar = document.getElementById("scrollBar");
+  var bar = scrollBar.children[0];
+  var mask = scrollBar.children[1];
+  var demo = document.getElementById("demo");
+  // 拖动原理
+  bar.onmousedown = function (event) {
+    var event = event || window.event;
+    var leftVal = event.clientX - this.offsetLeft;
+    console.log('eeee====', this)
+    // 拖动放到down的里面
+    var that = this;
+    document.onmousemove = function (event) {
+      var event = event || window.event;
+      that.style.left = event.clientX - leftVal + "px";
+      // 限制条件
+      var val = parseInt(that.style.left);
+      if (val < 0) {
+        that.style.left = 0;
+      } else if (val > 390) {
+        that.style.left = "390px";
+      }
+      // 移动的距离为遮罩的宽度
+      mask.style.width = that.style.left;
+      // 显示百分比
+      demo.innerHTML = "移动了:" + parseInt(parseInt(that.style.left) / 390 * 100) + "%";
+      // 清除拖动 --- 防止鼠标已经弹起时还在拖动
+      window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+    }
+    // 鼠标抬起停止拖动
+    document.onmouseup = function () {
+      document.onmousemove = null;
+    }
+  }
+</script>

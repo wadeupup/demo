@@ -2,102 +2,20 @@
   <div class="hello">
     <el-button @click="handleClickDrag">dianji</el-button>
     <!-- <div style="width: 100px; height: 100px; border: 1px solid black"></div> -->
-    <div
-      style="
-        overflow: auto;
-        position: relative;
-        border-top: 1px solid rgb(206, 206, 206);
-        border-left: 1px solid rgb(206, 206, 206);
-        border-right: 1px solid rgb(206, 206, 206);
-      "
-      id="right-gantt-table-tasks"
-    >
-      <div
-        class="left-gantt-columns"
-        id="left-gantt-columns"
-        style="position: absolute; top: 8px"
-      >
-        <div class="left-gantt-columns-name">任务名称</div>
-        <div class="left-gantt-columns-person">负责人</div>
-        <div class="left-gantt-columns-start">开始时间</div>
-        <div class="left-gantt-columns-duration">持续时间</div>
-        <div class="left-gantt-columns-add" @click="addTask">
-          <i class="el-icon-plus"></i>
-        </div>
-      </div>
-      <div
-        class="right-gantt-table"
-        id="right-gantt-table-refs"
-        style="margin-left: 400px; width: calc(100% - 400px); overflow: auto"
-      >
-        <div class="right-gantt-content">
-          <div class="right-gantt-content-year">{{ localYear }}年</div>
-          <div class="right-gantt-content-date" style="display: flex">
-            <template>
-              <div
-                v-for="(item, index) of showDays"
-                :key="index"
-                style="
-                  width: 60px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                "
-              >
-                {{ item + currentDay - 1 }}
-                {{ currentMonth + 1 }} 月
-              </div>
-            </template>
-            <template v-if="finallyDays">
-              <div
-                v-for="(item, index) of finallyDays - showDays - currentDay + 1"
-                :key="`${index}-we`"
-                style="
-                  width: 60px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                "
-              >
-                {{ item + showDays + currentDay - 1 }}
-                {{ currentMonth + 1 }} 月
-              </div>
-            </template>
-            <template v-if="showAnotherDays">
-              <div
-                v-for="(item, index) of days"
-                :key="`${index}-we`"
-                style="
-                  width: 60px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                "
-              >
-                {{ item }}
-                {{ currentMonth + 2 }} 月
-              </div>
-            </template>
-            <template v-if="anotherDays">
-              <div
-                v-for="(item, index) of anotherDays"
-                :key="`${index}-we-${currentMonth}`"
-                style="
-                  width: 60px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                "
-              >
-                {{ item }}
-                {{ currentMonth + 2 }} 月
-              </div>
-            </template>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="gantt-table" id="gantt-tables">
       <div
         class="left-gantt-table"
-        style="position: absolute; background: #fefeff; z-index: 99"
+        style="position: fixed; background: #fefeff; z-index: 99"
       >
+        <div class="left-gantt-columns">
+          <div class="left-gantt-columns-name">任务名称</div>
+          <div class="left-gantt-columns-person">负责人</div>
+          <div class="left-gantt-columns-start">开始时间</div>
+          <div class="left-gantt-columns-duration">持续时间</div>
+          <div class="left-gantt-columns-add" @click="addTask">
+            <i class="el-icon-plus"></i>
+          </div>
+        </div>
         <div class="left-gantt-content">
           <div
             class="left-gantt-content-item"
@@ -113,16 +31,46 @@
           </div>
         </div>
       </div>
-      <div
-        style="
-          margin-left: 400px;
-          position: relative;
-          width: calc(100% - 400px);
-          overflow-x: auto;
-          overflow-y: hidden;
-        "
-        id="timi"
-      >
+      <div style="margin-left: 420px; position: relative">
+        <div class="right-gantt-table">
+          <div class="right-gantt-content">
+            <div class="right-gantt-content-year">{{ localYear }}年</div>
+            <div class="right-gantt-content-date" style="display: flex">
+              <div
+                v-for="(item, index) of monthDays - currentDay + 1"
+                :key="index"
+                style="
+                  width: 60px;
+                  border-right: 1px solid #cecece;
+                  text-align: center;
+                "
+              >
+                {{ item + currentDay - 1 }}
+                {{ currentMonth + 1 }} 月
+              </div>
+            </div>
+          </div>
+
+          <!-- <div
+          class="progress-bar"
+          id="box1"
+          :style="{ left: left + 'px', top: 100 + 'px' }"
+          @click="moveBox(1)"
+        >
+          <div id="drag1" class="progress-bar-content">拖动区域</div>
+          被拖动的整个div
+        </div>
+        <div
+          id="box2"
+          class="progress-bar"
+          :style="{ left: left + 'px', top: 24 + 'px' }"
+        >
+          <div id="drag2" class="progress-bar-content" @click="moveBox(2)">
+            拖动区域
+          </div>
+          被拖动的整个div
+        </div> -->
+        </div>
         <div class="right-gantt-square">
           <div
             style="display: flex"
@@ -130,59 +78,17 @@
             :key="index"
           >
             <div
-              v-for="(item, index) of showDays"
+              v-for="(item, index) of monthDays - currentDay + 1"
               :key="index"
               style="
                 width: 60px;
-                height: 38px;
+                height: 35px;
                 border-right: 1px solid #cecece;
                 text-align: center;
                 border-bottom: 1px solid #cecece;
                 flex-shrink: 0;
               "
             ></div>
-            <template v-if="finallyDays">
-              <div
-                v-for="(item, index) of finallyDays - showDays - currentDay + 1"
-                :key="`${index}-we`"
-                style="
-                  width: 60px;
-                  height: 38px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                  border-bottom: 1px solid #cecece;
-                  flex-shrink: 0;
-                "
-              ></div>
-            </template>
-            <template v-if="showAnotherDays">
-              <div
-                v-for="(item, index) of days"
-                :key="`${index}-we`"
-                style="
-                  width: 60px;
-                  height: 38px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                  border-bottom: 1px solid #cecece;
-                  flex-shrink: 0;
-                "
-              ></div>
-            </template>
-            <template v-if="anotherDays">
-              <div
-                v-for="(item, index) of anotherDays"
-                :key="`${index}-wer-${currentMonth}`"
-                style="
-                  width: 60px;
-                  height: 38px;
-                  border-right: 1px solid #cecece;
-                  text-align: center;
-                  border-bottom: 1px solid #cecece;
-                  flex-shrink: 0;
-                "
-              ></div>
-            </template>
           </div>
         </div>
         <div
@@ -191,7 +97,7 @@
           :id="`box${index}`"
           :style="{
             left: progressStyle[index].left + 'px',
-            top: progressStyle[index].top * index + 0 + 'px',
+            top: progressStyle[index].top * (index + 1) + 'px',
             width: progressStyle[index].width + 'px',
           }"
           @click="moveBox(index)"
@@ -230,7 +136,7 @@
       title="新建任务"
       :visible.sync="addTaskVisible"
       width="50%"
-      :before-close="handletest"
+      :before-close="handleClose"
     >
       <el-form
         :model="taskForm"
@@ -260,10 +166,7 @@
           <el-input v-model="taskForm.duration" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="任务进度" prop="progress">
-          <div style="display: flex">
-            <el-input v-model="taskForm.progress"></el-input>
-            <div>%</div>
-          </div>
+          <el-input v-model="taskForm.progress"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -271,9 +174,6 @@
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
       </span>
     </el-dialog>
-    <div>
-      {{ detailDay }}{{ hh }}{{ finallyDays }}{{ anotherDays }}{{ days }}
-    </div>
   </div>
 </template>
 
@@ -285,12 +185,6 @@ export default {
   },
   data() {
     return {
-      detailDay: [],
-      maxDays: 0,
-      detailDays: 0,
-      hh: 0,
-      days: 0,
-      list: [],
       localTime: "",
       left: "",
       top: "",
@@ -299,11 +193,11 @@ export default {
         taskName: "",
         taskTime: "",
         duration: "",
-        progress: 0,
+        progress: "",
       },
       progressStyle: [
-        // { left: 10, top: 100 },
-        // { left: 20, top: 137 },
+        // { left: 0, top: 100 },
+        // { left: 0, top: 137 },
       ],
       progressBar: [],
       pickerOptions: {
@@ -315,36 +209,14 @@ export default {
         taskName: "",
         taskTime: "",
         duration: "",
-        progress: 0,
+        progress: "",
       },
       taskRules: {
         taskTime: [
           { required: true, message: "请输入任务时间", trigger: "blur" },
         ],
-        progress: [
-          { required: true, message: "请输入任务进展", trigger: "blur" },
-          {
-            validator: (rule, value, callback) => {
-              var reg = /^[0-9]\d*$/;
-              var valid = reg.test(value);
-              if (valid) {
-                if (value < 0) {
-                  callback(new Error("请重新输入任务进展！仅支持100以内整数"));
-                } else if (value > 100) {
-                  callback(new Error("请重新输入任务进展！仅支持100以内整数"));
-                } else {
-                  callback();
-                }
-              } else {
-                callback(new Error("请重新输入任务进展！仅支持100以内整数"));
-              }
-            },
-          },
-        ],
       },
       taskTable: [],
-      finallyDays: 0,
-      anotherDays: 0,
     };
   },
   computed: {
@@ -365,14 +237,11 @@ export default {
         const firstMinutes = standardTime / 60;
         const minutes = Math.floor(firstMinutes);
         const seconds = standardTime - minutes * 60;
-        const days = Math.floor(minutes / 24);
-        const hour = minutes - days * 24;
-        console.log("===34344", minutes, day);
-        // const firstDay = Math.floor(minutes / 60);//小时
-        // const confirmMinutes = minutes - firstDay * 60;//分钟
-        // const lastDay = Math.floor(confirmMinutes / 24);
-        // const hour = confirmMinutes - lastDay * 24;
-        const data = [days, hour, seconds, lastSecond];
+        const firstDay = Math.floor(minutes / 60);
+        const confirmMinutes = minutes - firstDay * 60;
+        const lastDay = Math.floor(confirmMinutes / 24);
+        const hour = confirmMinutes - lastDay * 24;
+        const data = [lastDay, hour, seconds, lastSecond];
         const title = ["天", "小时", "分钟", "秒"];
         let realData = "";
         data.forEach((item, index) => {
@@ -382,73 +251,9 @@ export default {
             realData += item + title[index];
           }
         });
-        console.log("=====>realData", data, realData);
         return realData;
       } else {
         return 0;
-      }
-    },
-    showDays() {
-      //假如本月剩余天数超过15tian
-      if (this.monthDays - this.currentDay + 1 >= 15) {
-        const myDate = new Date();
-        const myYear = myDate.getFullYear();
-        const myMonth = myDate.getMonth() + 1;
-        const myDay = myDate.getDate();
-        const monthDay = new Date(
-          `${myYear}-${myMonth}-${this.monthDays}`
-        ).getTime();
-        //如果任务截止日期最后一天在15天内，返回15天。假如超过15天，那么showdays暂时返回15天，多出的
-        //天数计算通过下面的showAnotherDays和days
-        console.log("===", this.taskForm.taskTime[1]);
-        console.log(myDay, monthDay);
-        if (this.taskForm.taskTime[1]) {
-          console.log("xhuosnoscno====>");
-          const a = this.taskForm.taskTime[1];
-          if (a.getTime() < monthDay) {
-            console.log("12w3e34");
-            return 15;
-          } else {
-            console.log("sssss");
-            const anotherTime =
-              this.taskForm.taskTime[1].getTime() -
-              new Date(`${myYear}-${myMonth}-${myDay}`).getTime();
-            const anotherDay = Math.floor(anotherTime / (1000 * 3600 * 24)) + 1;
-            const lastDay = anotherDay > 15 ? 15 : anotherDay;
-            console.log(lastDay, "=======>");
-            return lastDay;
-          }
-        } else {
-          return 15;
-        }
-      } else {
-        return this.monthDays - this.currentDay + 1;
-      }
-    },
-    showAnotherDays() {
-      //本月不够15天。延续到下个月中
-      if (15 - (this.monthDays - this.currentDay + 1) > 0) {
-        const selectionTime =
-          this.taskForm.taskTime[1] && this.taskForm.taskTime[1].getTime();
-        const dateTime = new Date(selectionTime);
-        const date = dateTime.getDate();
-        // const list = date
-        if (date > 15 - (this.monthDays - this.currentDay + 1)) {
-          return date;
-        } else {
-          return 15 - (this.monthDays - this.currentDay + 1);
-        }
-      } else {
-        return 0;
-        // if(this.taskForm.taskTime[1]&&this.taskForm.taskTime[1]){
-        //   const et = new Date(this.taskForm.taskTime[1]).getTime();
-        //    var regularDate = myDate.split("/").join("-");
-        //     var regularTime = new Date(regularDate).getTime();
-        //     var leftDay = (et - regularTime) / (1000 * 3600 * 24);
-        //     return leftDay-15
-        // }else{
-        //   return 10
-        // }
       }
     },
     currentMonth() {
@@ -493,8 +298,6 @@ export default {
   },
   mounted() {
     this.taskForm.duration = this.duration;
-    this.days = this.showAnotherDays;
-    window.addEventListener("scroll", this.handleScroll, true);
     // var myDate = new Date();
     // console.log("ee", myDate.getFullYear());
     // this.moveBox(
@@ -503,33 +306,6 @@ export default {
     // );
   },
   watch: {
-    "detailDay.length"(old, newValue) {
-      var max = this.detailDay[0];
-      var len = this.detailDay.length;
-      for (let i = 1; i < len; i++) {
-        if (this.detailDay[i] > max) {
-          max = this.detailDay[i];
-        }
-      }
-      this.hh = max;
-      // if (this.hh > 15) {
-      //   const myDate = new Date().getDate();
-      //   const day = myDate + old;
-      //   this.finallyDays = day > this.monthDays ? this.monthDays : day;
-      //   this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
-      // }
-      console.log("4544", this.hh, old, newValue);
-    },
-    hh(old, newValue) {
-      if (old > 15) {
-        const myDate = new Date().getDate();
-        const day = myDate + old;
-        this.finallyDays = day > this.monthDays ? this.monthDays : day;
-        this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
-      }
-      console.log(newValue);
-    },
-
     duration(newValue) {
       console.log("eeeee");
       this.taskForm.duration = newValue;
@@ -542,29 +318,10 @@ export default {
       // const newDate = this.taskForm.taskTime[0].getTime() + time;
       // console.log("wwww", new Date(newDate));
     },
-    showAnotherDays(old, newValue) {
-      const day = old > newValue ? old : newValue;
-      this.list.push(day);
-      this.list.sort();
-      this.days = this.list[this.list.length - 1];
-    },
   },
-
   methods: {
-    handleScroll() {
-      const topTwo = document.getElementById("right-gantt-table-refs")
-        .scrollLeft;
-      const top = document.getElementById("timi").scrollLeft;
-      if (top !== 0) {
-        document.getElementById("right-gantt-table-refs").scrollLeft = top;
-      }
-
-      // document.getElementById("left-gantt-columns").style.top = 12;
-      console.log("111", top, topTwo);
-    },
     handleProgress(index) {
-      console.log("111=====", this.progressStyle);
-      var maxWidth = this.progressStyle[index].width;
+      console.log("111=====");
       console.log(index);
       var dom = document.getElementById("drag" + index);
       console.log("dom====", dom);
@@ -581,13 +338,10 @@ export default {
           that.style.left = event1.clientX - leftVal + "px";
           // 限制条件
           var val = parseInt(that.style.left);
-          // console.log("2222", this.progressStyle, this.progressStyle);
-
-          console.log("45555", maxWidth);
           if (val < 0) {
             that.style.left = 0;
-          } else if (val > maxWidth) {
-            that.style.left = maxWidth + "px";
+          } else if (val > 390) {
+            that.style.left = "390px";
           }
           // 移动的距离为遮罩的宽度
           mask.style.width = that.style.left;
@@ -659,7 +413,8 @@ export default {
         x = x > maxL ? maxL : x;
         y = y < 0 ? 0 : y;
         y = y > maxT ? maxT : y;
-        const numberFar = (this.days + this.showDays) * 61 - B.offsetWidth;
+        const numberFar =
+          (this.monthDays - this.currentDay + 1) * 61 - B.offsetWidth;
         //console.log(number);
         x = x > numberFar ? numberFar : x;
         // const height = 20 * index
@@ -667,10 +422,9 @@ export default {
 
         // this.left = x;
         // this.top = y;
-        // 进度条往右拖拽时带动整个gantt-tables拖动
         const far = Math.floor((x + 60) / 320);
         // if (x > 195) {
-        document.getElementById("timi").scrollLeft = far * 300;
+        document.getElementById("gantt-tables").scrollLeft = far * 300;
         //     195 * (x / 195) + 100;
         // }
 
@@ -705,74 +459,30 @@ export default {
       this.$refs.taskForm.validate((valid) => {
         if (valid) {
           this.addTaskVisible = false;
-          const form = JSON.parse(JSON.stringify(this.taskForm));
-          this.taskTable.push(form);
+          this.taskTable.push(this.taskForm);
           console.log(
             "11111122",
             this.taskForm.duration,
             this.taskForm.taskTime
           );
-          //获取任务时长
           const st = new Date(this.taskForm.taskTime[0]).getTime();
           const et = new Date(this.taskForm.taskTime[1]).getTime();
           // console.log(this.taskForm);
           const day = et - st;
           const time = day / (1000 * 3600 * 24);
-          // 获取任务的left
-          // 获取当前日期仅限日期不包含时间
-          const myDate = new Date().toLocaleDateString();
-          // 规范当前的日期为--模式
-          var regularDate = myDate.split("/").join("-");
-          var regularTime = new Date(regularDate).getTime();
-          var leftDay = (st - regularTime) / (1000 * 3600 * 24);
-          var rightDay = Math.floor((et - regularTime) / (1000 * 3600 * 24));
-          this.maxDays = leftDay;
-          this.progressStyle.push({
-            left: leftDay * 61,
-            top: 39,
-            width: time * 61,
-          });
-          this.detailDay.push(rightDay);
-          console.log("rightday", this.detailDay, rightDay);
-          // this.detailDay.sort();
-          console.log("====shenmguia", this.detailDay.length);
-          // this.detailDays =
-          //   this.detailDay.length - 1 > 0
-          //     ? this.detailDay[this.detailDay.length - 1]
-          //     : 0;
-          console.log("weee", this.detailDays);
-          var progressWidth = (time * 60 * this.taskForm.progress) / 100;
-          this.progressBar.push({ left: progressWidth });
-          // document.getElementById("timi").scrollLeft = leftDay * 61;
-          this.$nextTick(() => {
-            document.getElementById("timi").scrollLeft = leftDay * 61;
-          });
 
-          console.log(
-            "tijiaoshangqu++++++++++",
-            leftDay * 61,
-            document.getElementById("timi").scrollLeft
-          );
-          console.log(
-            "222",
-            document.getElementById("timi").scrollLeft,
-            leftDay * 61
-          );
-          this.$refs.taskForm.resetFields();
-          this.$refs.taskForm.clearValidate();
-          // this.detailDays = this.detailDay.join(",");
-          // this.taskForm = Object.assign({}, this.newForm);
+          this.progressStyle.push({
+            left: 0,
+            top: 40,
+            width: time * 60,
+          });
+          this.progressBar.push({ left: 30 });
+          this.taskForm = Object.assign({}, this.newForm);
         }
       });
     },
-    handletest(done) {
-      done();
-      console.log("2222", done);
-    },
     handleClose() {
       this.addTaskVisible = false;
-      this.$refs.taskForm.resetFields();
-      this.$refs.taskForm.clearValidate();
     },
   },
 };
@@ -788,17 +498,16 @@ export default {
   overflow: auto;
   border: 1px solid #cecece;
   text-align: left;
-  position: relative;
   /* display: flex; */
   /* word-break: break-all; */
 }
 .left-gantt-table {
   width: 400px;
-  /* padding: 8px; */
-  /* height: 224px; */
+  padding: 8px;
+  height: 224px;
   border-right: 1px solid #cecece;
   font-size: 14px;
-  /* border-bottom: 1px solid #cecece; */
+  border-bottom: 1px solid #cecece;
 }
 .left-gantt-columns {
   display: flex;
@@ -806,35 +515,29 @@ export default {
   border-bottom: 1px solid #ebebeb;
   height: 34px;
   line-height: 34px;
-  border-right: 1px solid #ebebeb;
 }
 .input-class {
   width: 120px;
 }
 .left-gantt-columns-name {
   width: 90px;
-  text-align: center;
 }
 .left-gantt-columns-person {
   width: 70px;
-  text-align: center;
 }
 .el-date-editor {
   width: 100%;
 }
 .left-gantt-columns-duration {
   width: 124px;
-  text-align: center;
 }
 .left-gantt-content-item {
   display: flex;
   border-bottom: 1px solid #ebebeb;
   padding: 8px 0px;
-  height: 22px;
 }
 .left-gantt-columns-start {
   width: 100px;
-  text-align: center;
 }
 .left-gantt-columns-add:hover {
   color: red;
@@ -867,16 +570,16 @@ export default {
 .progress-bar {
   position: absolute;
   width: 300px;
-  height: 40px;
-  /* background: #d5cdda; */
-  /* border: 2px solid #ccc; */
+  height: 34px;
+  background: #d5cdda;
+  border: 2px solid #ccc;
   top: 150px;
   left: 400px;
   margin: 0;
   display: flex;
 }
 .progress-bar-content {
-  height: 38px;
+  height: 34px;
   cursor: move;
   background: #724a88;
   border-bottom: 1px solid #ccc;
@@ -884,8 +587,8 @@ export default {
   flex-basis: 99%;
 }
 .bar {
-  width: 2px;
-  height: 38px;
+  width: 10px;
+  height: 35px;
   background-color: red;
   position: absolute;
   left: 0;
