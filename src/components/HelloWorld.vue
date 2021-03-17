@@ -270,10 +270,7 @@
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
       </span>
     </el-dialog>
-    <div>
-      <div>{{ progressStyle }}-任务进度条总长度</div>
-      <div>{{ progressBar }}-目前任务的进展</div>
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -517,7 +514,7 @@ export default {
     hh(old, newValue) {
       if (old > 15) {
         const myDate = new Date().getDate();
-        const day = myDate + old;
+        const day = myDate + old - 1;
         this.finallyDays = day > this.monthDays ? this.monthDays : day;
         this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
       }
@@ -549,11 +546,11 @@ export default {
       const topTwo = document.getElementById("right-gantt-table-refs")
         .scrollLeft;
       const top = document.getElementById("timi").scrollLeft;
-      // if (top !== 0) {
-      //   document.getElementById("right-gantt-table-refs").scrollLeft = 0;
+      if (top !== 0) {
+        //   document.getElementById("right-gantt-table-refs").scrollLeft = 0;
 
-      document.getElementById("right-gantt-table-refs").scrollLeft = top;
-      // }
+        document.getElementById("right-gantt-table-refs").scrollLeft = top;
+      }
 
       // document.getElementById("left-gantt-columns").style.top = 12;
       console.log(
@@ -731,7 +728,7 @@ export default {
           var regularDate = myDate.split("/").join("-");
           var regularTime = new Date(regularDate).getTime();
           var leftDay = (st - regularTime) / (1000 * 3600 * 24);
-          var rightDay = Math.floor((et - regularTime) / (1000 * 3600 * 24));
+          var rightDay = Math.ceil((et - regularTime) / (1000 * 3600 * 24));
           this.maxDays = leftDay;
           this.progressStyle.push({
             left: leftDay * 61,
