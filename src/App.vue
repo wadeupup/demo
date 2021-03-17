@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div>111</div>
+    <div>CUT UI</div>
+    <!-- <div>111</div>
     <div style="width: 100px; height: 100px; border: 1px solid black"></div>
     <div
       style="
@@ -60,7 +61,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <HelloWorld msg="Welcome to Your Vue.js App" />

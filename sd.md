@@ -209,7 +209,9 @@
                 class="bar"
                 @click="handleProgress(index)"
                 :style="{ left: progressBar[index].left + 'px' }"
-              ></div>
+              >
+                1
+              </div>
               <div
                 :id="`dragMask${index}`"
                 class="mask"
@@ -271,8 +273,7 @@
       </span>
     </el-dialog>
     <div>
-      <div>{{ progressStyle }}-任务进度条总长度</div>
-      <div>{{ progressBar }}-目前任务的进展</div>
+      {{ detailDay }}{{ hh }}{{ finallyDays }}{{ anotherDays }}{{ days }}
     </div>
   </div>
 </template>
@@ -304,8 +305,8 @@ export default {
       progressStyle: [
         // { left: 10, top: 100 },
         // { left: 20, top: 137 },
-      ], //任务进度条总长度
-      progressBar: [], //目前任务的进展
+      ],
+      progressBar: [],
       pickerOptions: {
         disabledDate: (time) => {
           return time.getTime() < Date.now() - 8.64e7;
@@ -512,6 +513,12 @@ export default {
         }
       }
       this.hh = max;
+      // if (this.hh > 15) {
+      //   const myDate = new Date().getDate();
+      //   const day = myDate + old;
+      //   this.finallyDays = day > this.monthDays ? this.monthDays : day;
+      //   this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
+      // }
       console.log("4544", this.hh, old, newValue);
     },
     hh(old, newValue) {
@@ -549,19 +556,12 @@ export default {
       const topTwo = document.getElementById("right-gantt-table-refs")
         .scrollLeft;
       const top = document.getElementById("timi").scrollLeft;
-      // if (top !== 0) {
-      //   document.getElementById("right-gantt-table-refs").scrollLeft = 0;
-
-      document.getElementById("right-gantt-table-refs").scrollLeft = top;
-      // }
+      if (top !== 0) {
+        document.getElementById("right-gantt-table-refs").scrollLeft = top;
+      }
 
       // document.getElementById("left-gantt-columns").style.top = 12;
-      console.log(
-        "111",
-        top,
-        topTwo,
-        document.getElementById("right-gantt-table-refs").scrollLeft
-      );
+      console.log("111", top, topTwo);
     },
     handleProgress(index) {
       console.log("111=====", this.progressStyle);
@@ -660,9 +660,7 @@ export default {
         x = x > maxL ? maxL : x;
         y = y < 0 ? 0 : y;
         y = y > maxT ? maxT : y;
-        // 进度条能拖动的最大距离
-        const details = this.hh > 15 ? this.hh : 15;
-        const numberFar = (details + 1) * 61 - B.offsetWidth;
+        const numberFar = (this.days + this.showDays) * 61 - B.offsetWidth;
         //console.log(number);
         x = x > numberFar ? numberFar : x;
         // const height = 20 * index
@@ -674,14 +672,11 @@ export default {
         const far = Math.floor((x + 60) / 320);
         // if (x > 195) {
         document.getElementById("timi").scrollLeft = far * 300;
-        document.getElementById("right-gantt-table-refs").scrollLeft =
-          far * 300;
         //     195 * (x / 195) + 100;
         // }
 
         this.$forceUpdate();
         // console.log("222");
-        console.log(x);
         console.log(y);
         return false;
       };
@@ -888,7 +883,7 @@ export default {
 .progress-bar-content {
   height: 38px;
   cursor: move;
-  background: #b7bfce;
+  background: #724a88;
   border-bottom: 1px solid #ccc;
   padding: 0 10px;
   flex-basis: 99%;
@@ -896,7 +891,7 @@ export default {
 .bar {
   width: 2px;
   height: 38px;
-  background-color: #443d3d;
+  background-color: red;
   position: absolute;
   left: 0;
   cursor: pointer;
@@ -912,16 +907,5 @@ export default {
   height: 25px;
   width: 1px;
   cursor: e-resize;
-}
-::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
-}
-::-webkit-scrollbar-track {
-  border-radius: 2px;
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.1);
 }
 </style>
