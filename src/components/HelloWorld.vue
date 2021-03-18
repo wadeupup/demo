@@ -73,7 +73,7 @@
                 "
               >
                 {{ item }}
-                {{ currentMonth + 2 }} 月1
+                {{ currentMonth + 2 }} 月
               </div>
             </template>
             <template v-if="anotherDays">
