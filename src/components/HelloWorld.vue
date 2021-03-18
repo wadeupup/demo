@@ -62,7 +62,7 @@
                 {{ currentMonth + 1 }} 月
               </div>
             </template>
-            <template v-if="showAnotherDays">
+            <template v-if="showAnotherDays && !anotherDays">
               <div
                 v-for="(item, index) of days"
                 :key="`${index}-we`"
@@ -73,7 +73,7 @@
                 "
               >
                 {{ item }}
-                {{ currentMonth + 2 }} 月
+                {{ currentMonth + 2 }} 月1
               </div>
             </template>
             <template v-if="anotherDays">
@@ -156,7 +156,7 @@
                 "
               ></div>
             </template>
-            <template v-if="showAnotherDays">
+            <template v-if="showAnotherDays && !anotherDays">
               <div
                 v-for="(item, index) of days"
                 :key="`${index}-we`"
@@ -515,10 +515,11 @@ export default {
       if (old > 15) {
         const myDate = new Date().getDate();
         const day = myDate + old - 1;
+        console.log("222====", this.monthDays);
         this.finallyDays = day > this.monthDays ? this.monthDays : day;
         this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
       }
-      console.log(newValue);
+      // console.log("newValue", anotherDays);
     },
 
     duration(newValue) {
