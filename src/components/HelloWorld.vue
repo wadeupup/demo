@@ -198,7 +198,10 @@
           @click="moveBox(index)"
           :key="index"
         >
-          <div style="position: relative; display: flex; width: 100%">
+          <div
+            style="position: relative; display: flex; width: 100%"
+            @click="handleDragClick"
+          >
             <div
               :id="`drag${index}`"
               class="progress-bar-content"
@@ -270,7 +273,24 @@
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
       </span>
     </el-dialog>
-    <div></div>
+    <el-dialog title="修改任务" :visible.sync="changeVisible" width="50%">
+      <el-form
+        :model="taskDetail"
+        :rules="detailRules"
+        ref="taskDetail"
+        label-width="100px"
+      >
+        <el-form-item label="任务名称" prop="taskName">
+          <el-input
+            v-model="taskDetail.taskName"
+            placeholder="请输入任务名称"
+          ></el-input
+          >>
+        </el-form-item>
+        <!-- <el-form-item label="任务时间" prop=""></el-form-item> -->
+      </el-form>
+    </el-dialog>
+    <div>{{ progressStyle }}</div>
   </div>
 </template>
 
@@ -288,9 +308,12 @@ export default {
       hh: 0,
       days: 0,
       list: [],
+      changeVisible: false,
       localTime: "",
       left: "",
       top: "",
+      taskDetail: {},
+      detailRules: {},
       addTaskVisible: false,
       newForm: {
         taskName: "",
@@ -519,7 +542,7 @@ export default {
         this.finallyDays = day > this.monthDays ? this.monthDays : day;
         this.anotherDays = day > this.monthDays ? day - this.monthDays : 0;
       }
-      // console.log("newValue", anotherDays);
+      console.log("newValue", newValue);
     },
 
     duration(newValue) {
@@ -543,6 +566,29 @@ export default {
   },
 
   methods: {
+    handleDragClick() {
+      console.log("sssss");
+    },
+    timestampToTime(timestamp) {
+      return new Date(parseInt(timestamp) * 1000)
+        .toLocaleString()
+        .replace(/:\d{1,2}$/, " ");
+    },
+    getTaskDate(time) {
+      // 获取当前日期仅限日期不包含时间
+      const myDate = new Date().toLocaleDateString();
+      // 规范当前的日期为--模式
+      var regularDate = myDate.split("/").join("-");
+      //当前的时间
+      var regularTime = new Date(regularDate).getTime();
+      //目前的长度转换成天数
+      var currentTime = time / 61;
+      // 目前的天数转换成时间
+      var accountTime = currentTime * (1000 * 3600 * 24) + regularTime;
+      //目前时间转成天数
+      var result = this.timestampToTime(accountTime / 1000);
+      console.log("1122222", accountTime, result);
+    },
     handleScroll() {
       const topTwo = document.getElementById("right-gantt-table-refs")
         .scrollLeft;
@@ -626,11 +672,16 @@ export default {
           }
           B.style.width = W + "px";
         };
+
         document.onmouseup = function () {
           document.onmousemove = null;
           document.onmouseup = null;
         };
       };
+      this.$nextTick(() => {
+        console.log("b=====>", B.style.width, B);
+        this.progressStyle[index].width = B.style.width;
+      });
     },
     moveBox(index) {
       const B = document.getElementById("box" + index);
@@ -665,7 +716,9 @@ export default {
         x = x > numberFar ? numberFar : x;
         // const height = 20 * index
         this.progressStyle[index].left = x;
-
+        this.getTaskDate(x);
+        console.log("======>", this.progressStyle[index].width);
+        // console.log(this.getTaskDate(x));
         // this.left = x;
         // this.top = y;
         // 进度条往右拖拽时带动整个gantt-tables拖动
@@ -739,7 +792,13 @@ export default {
           this.detailDay.push(rightDay);
           console.log("rightday", this.detailDay, rightDay);
           // this.detailDay.sort();
-          console.log("====shenmguia", this.detailDay.length);
+          console.log(
+            "====shenmguia",
+            regularTime,
+            st,
+            st - regularTime,
+            this.detailDay.length
+          );
           // this.detailDays =
           //   this.detailDay.length - 1 > 0
           //     ? this.detailDay[this.detailDay.length - 1]
