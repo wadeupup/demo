@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = table;
+module.exports =  table;
 
 function table() {
     return "Hello from table";
