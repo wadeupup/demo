@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "packages": [
+    "packages/*"
+  ],
+  "command": {
+    "publish": {
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
+      "message": "chore(release): publish"
+    },
+    "bootstrap": {
+      "ignore": "component-*"
+    }
+  },
+  "version": "1.0.3",
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "useWorkspaces": false
+}
