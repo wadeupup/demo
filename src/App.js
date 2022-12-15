@@ -3,10 +3,10 @@ import Header from './components/Header'
 import List from './components/List'
 import Footer from './components/Footer'
 import './App.css'
+import { Button } from 'antd';
 class App extends Component {
     //状态在哪里，操作状态的方法就在哪里
     
-    //初始化状态
     state={
         todos:[
             {
@@ -102,7 +102,8 @@ class App extends Component {
         const {todos}=this.state
         return (
             <div className="todo-container">
-            
+            <Button type="primary">Primary</Button>
+
                 <div className="todo-wrap">   
                     <Header addTodo={this.addTodo}/>     
                     <List todos={todos} updateTodo={this.updateTodo} deleteTodo={this.deleteTodo}/>

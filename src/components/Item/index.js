@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css'
 class Item extends Component {
     //标识鼠标移入、移出
-    state={mouse:false}
+    state = {mouse:false}
     //鼠标移入、移除的回调
     handleMouse=(flag)=>{
         return()=>{
