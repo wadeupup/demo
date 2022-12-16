@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     computedHtml(html) {
+      console.log(111)
       if (isString(html)) {
         return html.replace(/\n/g, "<br/>");
       }
