@@ -26,7 +26,7 @@ class Item extends Component {
     }
     render() {
         const {id,name,done} =this.props
-        const{mouse}=this.state
+        const{mouse}= this.state
         return (
             <li style={{backgroundColor:mouse?'#ddd':'white'}} onMouseLeave={this.handleMouse(false)} onMouseEnter={this.handleMouse(true)}>
                 <label>
