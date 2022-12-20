@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import Header from './components/Header'
 import List from './components/List'
 import Footer from './components/Footer'
+// import Count from './containers/Count/index'
+import Count from './components/Count/index'
+// import store from './redux/store'
 import './App.css'
 import { Button } from 'antd';
 class App extends Component {
     //状态在哪里，操作状态的方法就在哪里
     
-    state={
+    state = {
         todos:[
             {
                 id:1,
@@ -102,6 +105,7 @@ class App extends Component {
         const {todos}=this.state
         return (
             <div className="todo-container">
+                <Count ></Count>
             <Button type="primary">Primary</Button>
 
                 <div className="todo-wrap">   

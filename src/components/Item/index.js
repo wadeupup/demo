@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
+import React, { Component } from 'react'
 import './index.css'
 class Item extends Component {
     //标识鼠标移入、移出
