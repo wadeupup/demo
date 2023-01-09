@@ -18,7 +18,6 @@ class Item extends Component {
             this.props.updateTodo(id,event.target.checked)
         }
     }
-
     //删除一个todo的回调
     handleDelete=(id)=>{
         if(window.confirm('确定删除吗')){
